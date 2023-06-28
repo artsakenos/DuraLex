@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <script src="./DuraLex_Compact.js"></script>
+        <script>
+
+            function pippo() {
+                legal_json.forEach(codice => console.log(codice.id));
+            }
+
+            function search(text) {
+                var output = [];
+                legal_json.forEach(codice =>
+                {
+                    console.log(codice.id);
+                    codice.articoli.forEach(articolo => {
+                        // console.log(articolo.articolo_titolo)
+                        if (articolo.articolo_html.includes(text)) {
+                            if (output.length < 20) {
+                                output.push(articolo);
+                            }
+                        }
+                    });
+                }
+                );
+                return output;
+            }
+        </script>
+    </head>
+
+    <body>
+        <h2>DuraLex searcher</h2>
+        Qui ho giusto inserito qualche test che sfrutta il file DuraLex_Compact che si crea giusto
+        buttando tutto in un .js e inserendo var legal_json:
+        <pre>
+        var legal_json=[ {
+            "id" : "/codici/codice-civile",
+        </pre>
+        <p id="demo"></p>
+        <button onclick="search_something()">Click me</button>
+    </body>
+
+    <footer>
+        <script>
+            document.getElementById("demo").innerHTML = "Hey Demo qui!";
+            function search_something() {
+                var result = search('nascita');
+                var output_string = "";
+                result.forEach(articolo => {
+                    output_string += '<b>' + articolo.articolo_titolo + '</b>:' + articolo.articolo_html + '<br>\n';
+                });
+                document.getElementById("demo").innerHTML = output_string;
+            }
+        </script>
+
+    </footer>
+</html>
+
+

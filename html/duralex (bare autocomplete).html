@@ -1,0 +1,49 @@
+<!doctype html>
+<html lang = "en">
+    <head>
+        <meta charset = "utf-8">
+        <title>DuraLex, AutocompleTest</title>
+        <link href = "https://code.jquery.com/ui/1.10.4/themes/ui-lightness/jquery-ui.css" rel = "stylesheet">
+        <script src = "https://code.jquery.com/jquery-1.10.2.js"></script>
+        <script src = "https://code.jquery.com/ui/1.10.4/jquery-ui.js"></script>
+
+        <style>
+            #duralex_autocomplete {
+                margin:20px;
+            }
+        </style>
+
+        <!-- Javascript -->
+        <script>
+            $(function () {
+                $("#duralex_autocomplete").autocomplete({
+                    source: "/duralex/autocomplete",
+                    minLength: 2,
+                    autoFocus: true, // Impone l'autofocus al load 
+                    delay: 200, // Delay 0 ha senso per dati locali
+                    select: function (event, ui) {
+                        load_article(ui.item.label);
+                        console.log(ui);
+                    }
+                });
+
+                function load_article(titolo) {
+                    console.log("Ricevuto: " + titolo);
+                    $.get("/duralex/getByTitle?title=" + titolo,
+                            function (data, status) {
+                                console.log(data);
+                                console.log("Status: " + status);
+                                console.log(data.codice_nome);
+                            }
+                    );
+                }
+
+            });
+
+        </script> 
+    </head>
+
+    <body>
+        <input id="duralex_autocomplete" size="50">
+    </body>
+</html>

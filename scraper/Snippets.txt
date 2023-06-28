@@ -1,0 +1,37 @@
+
+== SQLite ==
+private final SQLiteConnector db = new SQLiteConnector("DuraLex.db");
+
+String sql = "INSERT INTO codici ("
+                + "tipo_codice, articolo_numero, articolo_titolo, articolo_contenuto, "
+                + "sezione_titolo, sezione_libro, articolo_argomenti, articoli_correlati "
+                + ") VALUES (?, ?, ?, ?, ?, ?, ?, ?);";
+        PreparedStatement prepStmt;
+        try {
+            prepStmt = db.getPreparedStatement(sql);
+            prepStmt.setString(1, articolo.tipo_codice);
+            prepStmt.setString(2, articolo.articolo_numero);
+            prepStmt.setString(3, articolo.articolo_titolo);
+            prepStmt.setString(4, articolo.articolo_testo);
+            prepStmt.setString(5, articolo.sezione_titolo);
+            prepStmt.setString(6, articolo.sezione_libro);
+            prepStmt.setString(7, "");
+            prepStmt.setString(8, "");
+            // prepStmt.executeUpdate();
+        } catch (SQLException ex) {
+            Logger.getLogger(Scraper_LexScripta.class.getName()).log(Level.SEVERE, null, ex);
+        }
+
+    public void test_normattiva() {
+        Client client = new Client("https://www.normattiva.it", "", "");
+        Response response;
+        response = client.get("/uri-res/N2Ls?urn:nir:stato:regio.decreto:1930-10-19;1398");
+        String cookie = response.header("Set-Cookie");
+        client.headers.put("Cookie", cookie);
+        response = client.get("/atto/caricaArticolo?art.progressivo=0&art.idArticolo=2&art.versione=1&art.codiceRedazionale=030U1398&art.dataPubblicazioneGazzetta=1930-10-26&atto.tipoProvvedimento=REGIO%20DECRETO&art.idGruppo=1&art.idSottoArticolo1=10&art.idSottoArticolo=1&art.flagTipoArticolo=1#art");
+        String toString_Response = Client.toString_Response(response);
+        toString_Response = SuperString.getFrom(toString_Response, "<div class=\"wrapper_pre\">");
+        toString_Response = SuperString.getFrom(toString_Response, "<pre>");
+        toString_Response = toString_Response.substring(0, toString_Response.indexOf("</pre>")).trim();
+        System.out.println(toString_Response);
+    }
